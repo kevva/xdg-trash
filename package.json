@@ -1,0 +1,36 @@
+{
+  "name": "trash-linux",
+  "version": "1.0.0",
+  "description": "Safely move files and directories to trash",
+  "license": "MIT",
+  "repository": "kevva/trash-linux",
+  "author": {
+    "name": "Kevin Mårtensson",
+    "email": "kevinmartensson@gmail.com",
+    "url": "https://github.com/kevva"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "test": "node test.js"
+  },
+  "files": [
+    "index.js"
+  ],
+  "keywords": [
+    "delete",
+    "dir",
+    "file",
+    "recycle",
+    "trash"
+  ],
+  "dependencies": {
+    "each-async": "^1.1.0",
+    "mkdirp": "^0.5.0",
+    "mv": "^2.0.3"
+  },
+  "devDependencies": {
+    "ava": "^0.0.4"
+  }
+}
