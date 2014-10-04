@@ -5,6 +5,7 @@ var fs = require('fs');
 var mkdir = require('mkdirp');
 var mv = require('mv');
 var path = require('path');
+var uuid = require('uuid');
 
 /**
  * Safely move files and directories to trash
@@ -27,8 +28,9 @@ module.exports = function (files, cb) {
 	});
 
 	each(files, function (file, i, next) {
-		var dest = path.join(trash, 'files', path.basename(file));
-		var info = path.join(trash, 'info', path.basename(file) + '.trashinfo');
+		var name = uuid.v4();
+		var dest = path.join(trash, 'files', name);
+		var info = path.join(trash, 'info', name + '.trashinfo');
 
 		var msg = [
 			'[Trash Info]',
