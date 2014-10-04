@@ -19,7 +19,7 @@ trash(['foo.txt', 'bar.tar'], function (err) {
 	}
 
 	console.log('Files successfully moved to trash!');
-})
+});
 ```
 
 ## License
