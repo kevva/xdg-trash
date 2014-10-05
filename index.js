@@ -2,7 +2,6 @@
 
 var each = require('each-async');
 var fs = require('fs-extra');
-var mv = require('mv');
 var path = require('path');
 var uuid = require('uuid');
 
@@ -26,7 +25,7 @@ function trash(src, cb) {
 		'DeletionDate=' + new Date().toISOString()
 	].join('\n');
 
-	mv(src, dest, { mkdirp: true }, function (err) {
+	fs.move(src, dest, { mkdirp: true }, function (err) {
 		if (err) {
 			cb(err);
 			return;
