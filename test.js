@@ -66,3 +66,24 @@ test('create trashinfo', function (t) {
 		});
 	});
 });
+
+test('preserve file attributes', function (t) {
+	t.plan(5);
+
+	fs.writeFile('fstat', '', function (err) {
+		t.assert(!err);
+
+		fs.stat('fstat', function (err, a) {
+			t.assert(!err);
+
+			trash(['fstat'], function (err, files) {
+				t.assert(!err);
+
+				fs.stat(files[0].path, function (err, b) {
+					t.assert(!err);
+					t.assert(JSON.stringify(a) === JSON.stringify(b));
+				});
+			});
+		});
+	});
+});
