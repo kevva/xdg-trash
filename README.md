@@ -22,6 +22,10 @@ trash(['foo.txt', 'bar.tar'], function (err) {
 });
 ```
 
+## CLI
+
+See the [trash](https://github.com/sindresorhus/trash#cli) CLI.
+
 ## License
 
 MIT © [Kevin Mårtensson](https://github.com/kevva)
