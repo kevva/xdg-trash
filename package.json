@@ -1,9 +1,9 @@
 {
-  "name": "trash-linux",
+  "name": "xdg-trash",
   "version": "1.0.0",
-  "description": "Safely move files and directories to trash",
+  "description": "Safely move files and directories to trash on Linux",
   "license": "MIT",
-  "repository": "kevva/trash-linux",
+  "repository": "kevva/xdg-trash",
   "author": {
     "name": "Kevin Mårtensson",
     "email": "kevinmartensson@gmail.com",
@@ -22,8 +22,10 @@
     "delete",
     "dir",
     "file",
+    "linux",
     "recycle",
-    "trash"
+    "trash",
+    "xdg"
   ],
   "dependencies": {
     "each-async": "^1.1.0",

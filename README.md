@@ -1,17 +1,17 @@
-# trash-linux [![Build Status](http://img.shields.io/travis/kevva/trash-linux.svg?style=flat)](https://travis-ci.org/kevva/trash-linux)
+# xdg-trash [![Build Status](http://img.shields.io/travis/kevva/xdg-trash.svg?style=flat)](https://travis-ci.org/kevva/xdg-trash)
 
 > Safely move files and directories to trash on Linux
 
 ## Install
 
 ```sh
-$ npm install --save trash-linux
+$ npm install --save xdg-trash
 ```
 
 ## Usage
 
 ```js
-var trash = require('trash-linux');
+var trash = require('xdg-trash');
 
 trash(['foo.txt', 'bar.tar'], function (err) {
 	if (err) {
