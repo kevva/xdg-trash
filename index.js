@@ -16,8 +16,8 @@ var uuid = require('uuid');
 function trash(src, cb) {
 	var home = process.env.XDG_DATA_HOME || path.join(process.env.HOME,'.local/share');
 	var name = uuid.v4();
-	var dest = path.join(home, 'Trash/files', name);
-	var info = path.join(home, 'Trash/info', name + '.trashinfo');
+	var dest = path.join(home, 'Trash', 'files', name);
+	var info = path.join(home, 'Trash', 'info', name + '.trashinfo');
 
 	var msg = [
 		'[Trash Info]',
