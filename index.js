@@ -37,7 +37,7 @@ function trash(src, cb) {
 				return;
 			}
 
-			cb();
+			cb(null, { path: dest, info: info });
 		});
 	});
 }
@@ -50,6 +50,7 @@ function trash(src, cb) {
  */
 
 module.exports = function (paths, cb) {
+	var files = [];
 	cb = cb || function () {};
 
 	if (process.platform !== 'linux') {
@@ -65,12 +66,13 @@ module.exports = function (paths, cb) {
 	});
 
 	each(paths, function (path, i, next) {
-		trash(path, function (err) {
+		trash(path, function (err, file) {
 			if (err) {
 				next(err);
 				return;
 			}
 
+			files.push(file);
 			next();
 		});
 	}, function (err) {
@@ -79,6 +81,6 @@ module.exports = function (paths, cb) {
 			return;
 		}
 
-		cb();
+		cb(null, files);
 	});
 };
