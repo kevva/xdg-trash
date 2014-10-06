@@ -4,6 +4,7 @@ var each = require('each-async');
 var fs = require('fs-extra');
 var path = require('path');
 var uuid = require('uuid');
+var home = require('xdg-basedir').data;
 
 /**
  * Safely move files and directories to trash on Linux
@@ -14,7 +15,6 @@ var uuid = require('uuid');
  */
 
 function trash(src, cb) {
-	var home = process.env.XDG_DATA_HOME || path.join(process.env.HOME,'.local/share');
 	var name = uuid.v4();
 	var dest = path.join(home, 'Trash', 'files', name);
 	var info = path.join(home, 'Trash', 'info', name + '.trashinfo');
