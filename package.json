@@ -31,7 +31,7 @@
     "each-async": "^1.1.0",
     "fs-extra": "^0.12.0",
     "uuid": "^2.0.1",
-    "xdg-basedir": "^1.0.0"
+    "xdg-trashdir": "^1.0.0"
   },
   "devDependencies": {
     "ava": "^0.0.4"

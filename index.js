@@ -3,8 +3,8 @@
 var each = require('each-async');
 var fs = require('fs-extra');
 var path = require('path');
+var trashdir = require('xdg-trashdir');
 var uuid = require('uuid');
-var home = require('xdg-basedir').data;
 
 /**
  * Safely move files and directories to trash on Linux
@@ -15,29 +15,31 @@ var home = require('xdg-basedir').data;
  */
 
 function trash(src, cb) {
-	var name = uuid.v4();
-	var dest = path.join(home, 'Trash', 'files', name);
-	var info = path.join(home, 'Trash', 'info', name + '.trashinfo');
+	trashdir(src, function (err, dir) {
+		var name = uuid.v4();
+		var dest = path.join(dir, 'files', name);
+		var info = path.join(dir, 'info', name + '.trashinfo');
 
-	var msg = [
-		'[Trash Info]',
-		'Path=' + src,
-		'DeletionDate=' + new Date().toISOString()
-	].join('\n');
+		var msg = [
+			'[Trash Info]',
+			'Path=' + src,
+			'DeletionDate=' + new Date().toISOString()
+		].join('\n');
 
-	fs.move(src, dest, { mkdirp: true }, function (err) {
-		if (err) {
-			cb(err);
-			return;
-		}
-
-		fs.outputFile(info, msg, function (err) {
+		fs.move(src, dest, { mkdirp: true }, function (err) {
 			if (err) {
 				cb(err);
 				return;
 			}
 
-			cb(null, { path: dest, info: info });
+			fs.outputFile(info, msg, function (err) {
+				if (err) {
+					cb(err);
+					return;
+				}
+
+				cb(null, { path: dest, info: info });
+			});
 		});
 	});
 }
