@@ -16,6 +16,11 @@ var uuid = require('uuid');
 
 function trash(src, cb) {
 	trashdir(src, function (err, dir) {
+		if (err) {
+			cb(err);
+			return;
+		}
+
 		var name = uuid.v4();
 		var dest = path.join(dir, 'files', name);
 		var info = path.join(dir, 'info', name + '.trashinfo');
