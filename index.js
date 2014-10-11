@@ -11,7 +11,7 @@ var uuid = require('uuid');
  *
  * @param {String} src
  * @param {Function} cb
- * @api public
+ * @api private
  */
 
 function trash(src, cb) {
@@ -54,6 +54,7 @@ function trash(src, cb) {
  *
  * @param {Array} paths
  * @param {Function} cb
+ * @api public
  */
 
 module.exports = function (paths, cb) {
