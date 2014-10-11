@@ -87,3 +87,12 @@ test('preserve file attributes', function (t) {
 		});
 	});
 });
+
+test('set `.noStack` to true when file doesn\'t exist', function (t) {
+	t.plan(2);
+
+	trash(['non-existant-file'], function (err) {
+		t.assert(err);
+		t.assert(err.noStack);
+	});
+});
