@@ -62,10 +62,12 @@ module.exports = function (paths, cb) {
 
 	if (process.platform !== 'linux') {
 		cb(new Error('Only Linux systems are supported'));
+		return;
 	}
 
 	if (!Array.isArray(paths)) {
 		cb(new Error('`paths` is required'));
+		return;
 	}
 
 	paths = paths.map(function (p) {
