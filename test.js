@@ -9,10 +9,10 @@ test('move file to trash', function (t) {
 	t.plan(4);
 
 	fs.writeFile('ffile', '', function (err) {
-		t.assert(!err);
+		t.assert(!err, err);
 
 		trash(['ffile'], function (err, files) {
-			t.assert(!err);
+			t.assert(!err, err);
 
 			fs.exists('ffile', function (exists) {
 				t.assert(!exists);
@@ -32,7 +32,7 @@ test('move directory to trash', function (t) {
 		t.assert(!err, err);
 
 		trash(['fdir'], function (err, files) {
-			t.assert(!err);
+			t.assert(!err, err);
 
 			fs.exists('fdir', function (exists) {
 				t.assert(!exists);
@@ -49,7 +49,7 @@ test('create trashinfo', function (t) {
 	t.plan(4);
 
 	fs.writeFile('finfo', '', function (err) {
-		t.assert(!err);
+		t.assert(!err, err);
 
 		var info = [
 			'[Trash Info]',
@@ -57,10 +57,10 @@ test('create trashinfo', function (t) {
 		].join('\n');
 
 		trash(['finfo'], function (err, files) {
-			t.assert(!err);
+			t.assert(!err, err);
 
 			fs.readFile(files[0].info, 'utf8', function (err, data) {
-				t.assert(!err);
+				t.assert(!err, err);
 				t.assert(data.trim().indexOf(info.trim()) !== -1);
 			});
 		});
@@ -71,16 +71,16 @@ test('preserve file attributes', function (t) {
 	t.plan(5);
 
 	fs.writeFile('fstat', '', function (err) {
-		t.assert(!err);
+		t.assert(!err, err);
 
 		fs.stat('fstat', function (err, a) {
-			t.assert(!err);
+			t.assert(!err, err);
 
 			trash(['fstat'], function (err, files) {
-				t.assert(!err);
+				t.assert(!err, err);
 
 				fs.stat(files[0].path, function (err, b) {
-					t.assert(!err);
+					t.assert(!err, err);
 					t.assert(JSON.stringify(a) === JSON.stringify(b));
 				});
 			});
