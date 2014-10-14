@@ -15,7 +15,7 @@ var uuid = require('uuid');
  */
 
 function trash(src, cb) {
-	trashdir(src.replace(/\s/g, '\\ '), function (err, dir) {
+	trashdir(src, function (err, dir) {
 		if (err) {
 			if (err.code === 'ENOENT') {
 				err.noStack = true;
