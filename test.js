@@ -25,6 +25,26 @@ test('move file to trash', function (t) {
 	});
 });
 
+test('move file to trash', function (t) {
+	t.plan(4);
+
+	fs.writeFile('f file space [foo]', '', function (err) {
+		t.assert(!err, err);
+
+		trash(['f file space [foo]'], function (err, files) {
+			t.assert(!err, err);
+
+			fs.exists('f file space [foo]', function (exists) {
+				t.assert(!exists);
+
+				fs.exists(files[0].path, function (exists) {
+					t.assert(exists);
+				});
+			});
+		});
+	});
+});
+
 test('move directory to trash', function (t) {
 	t.plan(4);
 
