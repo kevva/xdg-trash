@@ -15,7 +15,7 @@ var uuid = require('uuid');
  */
 
 function trash(src, cb) {
-	trashdir(src, function (err, dir) {
+	trashdir(src.replace(/\s/g, '\\ '), function (err, dir) {
 		if (err) {
 			if (err.code === 'ENOENT') {
 				err.noStack = true;
@@ -31,7 +31,7 @@ function trash(src, cb) {
 
 		var msg = [
 			'[Trash Info]',
-			'Path=' + src,
+			'Path=' + src.replace(/\s/g, '%20'),
 			'DeletionDate=' + new Date().toISOString()
 		].join('\n');
 
