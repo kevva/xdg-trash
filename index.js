@@ -66,8 +66,7 @@ module.exports = function (paths, cb) {
 	cb = cb || function () {};
 
 	if (process.platform !== 'linux') {
-		cb(new Error('Only Linux systems are supported'));
-		return;
+		throw new Error ('Only Linux systems are supported');
 	}
 
 	if (!Array.isArray(paths)) {
