@@ -6,14 +6,6 @@ var path = require('path');
 var trashdir = require('xdg-trashdir');
 var uuid = require('uuid');
 
-/**
- * Safely move files and directories to trash on Linux
- *
- * @param {String} src
- * @param {Function} cb
- * @api private
- */
-
 function trash(src, cb) {
 	trashdir(src, function (err, dir) {
 		if (err) {
@@ -52,14 +44,6 @@ function trash(src, cb) {
 		});
 	});
 }
-
-/**
- * Module exports
- *
- * @param {Array} paths
- * @param {Function} cb
- * @api public
- */
 
 module.exports = function (paths, cb) {
 	var files = [];
