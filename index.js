@@ -57,8 +57,7 @@ module.exports = function (paths, cb) {
 	}
 
 	if (!Array.isArray(paths)) {
-		cb(new Error('`paths` is required'));
-		return;
+		throw new Error('`paths` is required');
 	}
 
 	paths = paths.map(function (p) {
