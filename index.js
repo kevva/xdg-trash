@@ -1,13 +1,13 @@
 'use strict';
 
-var each = require('each-async');
+var eachAsync = require('each-async');
 var fs = require('fs-extra');
 var path = require('path');
-var trashdir = require('xdg-trashdir');
 var uuid = require('uuid');
+var xdgTrashdir = require('xdg-trashdir');
 
 function trash(src, cb) {
-	trashdir(src, function (err, dir) {
+	xdgTrashdir(src, function (err, dir) {
 		if (err) {
 			if (err.code === 'ENOENT') {
 				err.noStack = true;
@@ -64,7 +64,7 @@ module.exports = function (paths, cb) {
 		return path.resolve(String(p));
 	});
 
-	each(paths, function (path, i, next) {
+	eachAsync(paths, function (path, i, next) {
 		trash(path, function (err, file) {
 			if (err) {
 				next(err);

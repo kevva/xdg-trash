@@ -11,9 +11,9 @@ $ npm install --save xdg-trash
 ## Usage
 
 ```js
-var trash = require('xdg-trash');
+var xdgTrash = require('xdg-trash');
 
-trash(['foo.txt', 'bar.tar'], function (err) {
+xdgTrash(['foo.txt', 'bar.tar'], function (err) {
 	if (err) {
 		throw err;
 	}
