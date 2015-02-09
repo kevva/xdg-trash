@@ -27,7 +27,7 @@ function trash(src, cb) {
 			'DeletionDate=' + new Date().toISOString()
 		].join('\n');
 
-		fs.move(src, dest, { mkdirp: true }, function (err) {
+		fs.move(src, dest, {mkdirp: true}, function (err) {
 			if (err) {
 				cb(err);
 				return;
@@ -39,7 +39,10 @@ function trash(src, cb) {
 					return;
 				}
 
-				cb(null, { path: dest, info: info });
+				cb(null, {
+					path: dest,
+					info: info
+				});
 			});
 		});
 	});
