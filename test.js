@@ -6,112 +6,78 @@ var test = require('ava');
 var trash = require('./');
 
 test('move file to trash', function (t) {
-	t.plan(4);
+	t.plan(3);
 
-	fs.writeFile('ffile', '', function (err) {
+	fs.writeFileSync('f0', '');
+
+	trash(['f0'], function (err, files) {
 		t.assert(!err, err);
-
-		trash(['ffile'], function (err, files) {
-			t.assert(!err, err);
-
-			fs.exists('ffile', function (exists) {
-				t.assert(!exists);
-
-				fs.exists(files[0].path, function (exists) {
-					t.assert(exists);
-				});
-			});
-		});
+		t.assert(!fs.existsSync('f0'));
+		t.assert(fs.existsSync(files[0].path));
 	});
 });
 
 test('move file with spaces to trash', function (t) {
-	t.plan(4);
+	t.plan(3);
 
-	fs.writeFile('f file space [foo]', '', function (err) {
+	fs.writeFileSync('f 1', '');
+
+	trash(['f 1'], function (err, files) {
 		t.assert(!err, err);
-
-		trash(['f file space [foo]'], function (err, files) {
-			t.assert(!err, err);
-
-			fs.exists('f file space [foo]', function (exists) {
-				t.assert(!exists);
-
-				fs.exists(files[0].path, function (exists) {
-					t.assert(exists);
-				});
-			});
-		});
+		t.assert(!fs.existsSync('f 1'));
+		t.assert(fs.existsSync(files[0].path));
 	});
 });
 
 test('move directory to trash', function (t) {
-	t.plan(4);
+	t.plan(3);
 
-	fs.mkdir('fdir', function (err) {
+	fs.mkdirSync('d0');
+
+	trash(['d0'], function (err, files) {
 		t.assert(!err, err);
-
-		trash(['fdir'], function (err, files) {
-			t.assert(!err, err);
-
-			fs.exists('fdir', function (exists) {
-				t.assert(!exists);
-
-				fs.exists(files[0].path, function (exists) {
-					t.assert(exists);
-				});
-			});
-		});
+		t.assert(!fs.existsSync('d0'));
+		t.assert(fs.existsSync(files[0].path));
 	});
 });
 
 test('create trashinfo', function (t) {
-	t.plan(4);
+	t.plan(2);
 
-	fs.writeFile('finfo', '', function (err) {
+	fs.writeFileSync('f2', '');
+
+	var info = [
+		'[Trash Info]',
+		'Path=' + path.resolve('f2')
+	].join('\n');
+
+	trash(['f2'], function (err, files) {
+		var infoFile = fs.readFileSync(files[0].info, 'utf8');
 		t.assert(!err, err);
-
-		var info = [
-			'[Trash Info]',
-			'Path=' + path.resolve('finfo')
-		].join('\n');
-
-		trash(['finfo'], function (err, files) {
-			t.assert(!err, err);
-
-			fs.readFile(files[0].info, 'utf8', function (err, data) {
-				t.assert(!err, err);
-				t.assert(data.trim().indexOf(info.trim()) !== -1);
-			});
-		});
+		t.assert(infoFile.trim().indexOf(info.trim()) !== -1);
 	});
 });
 
 test('preserve file attributes', function (t) {
 	t.plan(5);
 
-	fs.writeFile('fstat', '', function (err) {
+	fs.writeFileSync('f3', '');
+	var statSrc = fs.statSync('f3');
+
+	trash(['f3'], function (err, files) {
+		var statDest = fs.statSync(files[0].path);
 		t.assert(!err, err);
-
-		fs.stat('fstat', function (err, a) {
-			t.assert(!err, err);
-
-			trash(['fstat'], function (err, files) {
-				t.assert(!err, err);
-
-				fs.stat(files[0].path, function (err, b) {
-					t.assert(!err, err);
-					t.assert(JSON.stringify(a) === JSON.stringify(b));
-				});
-			});
-		});
+		t.assert(statSrc.mode === statDest.mode);
+		t.assert(statSrc.uid === statDest.uid);
+		t.assert(statSrc.gid === statDest.gid);
+		t.assert(statSrc.size === statDest.size);
 	});
 });
 
-test('set `.noStack` to true when file doesn\'t exist', function (t) {
+test('set `.noStack` to true when file does not exist', function (t) {
 	t.plan(2);
 
-	trash(['non-existant-file'], function (err) {
+	trash(['f4'], function (err) {
 		t.assert(err);
 		t.assert(err.noStack);
 	});
