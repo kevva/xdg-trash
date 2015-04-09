@@ -2,11 +2,13 @@
 
 > Safely move files and directories to trash on Linux
 
+
 ## Install
 
-```sh
+```
 $ npm install --save xdg-trash
 ```
+
 
 ## Usage
 
@@ -14,17 +16,35 @@ $ npm install --save xdg-trash
 var xdgTrash = require('xdg-trash');
 
 xdgTrash(['foo.txt', 'bar.tar'], function (err) {
-	if (err) {
-		throw err;
-	}
-
 	console.log('Files successfully moved to trash!');
 });
 ```
 
+
+## API
+
+### xdgTrash(files, callback)
+
+Move files to trash.
+
+#### files
+
+*Required*
+Type: `array`
+
+Files to be moved to trash.
+
+#### callback(err)
+
+Type: `function`
+
+Returns nothing but a possible exception.
+
+
 ## CLI
 
 See the [trash](https://github.com/sindresorhus/trash#cli) CLI.
+
 
 ## License
 

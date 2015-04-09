@@ -1,8 +1,8 @@
 'use strict';
 
+var path = require('path');
 var eachAsync = require('each-async');
 var fs = require('fs-extra');
-var path = require('path');
 var uuid = require('uuid');
 var xdgTrashdir = require('xdg-trashdir');
 
