@@ -1,6 +1,6 @@
 {
   "name": "xdg-trash",
-  "version": "1.0.6",
+  "version": "1.1.0",
   "description": "Safely move files and directories to trash on Linux",
   "license": "MIT",
   "repository": "kevva/xdg-trash",
