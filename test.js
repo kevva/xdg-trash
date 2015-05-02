@@ -2,6 +2,7 @@
 var fs = require('fs');
 var path = require('path');
 var test = require('ava');
+var pathExists = require('path-exists');
 var xdgTrash = require('./');
 
 test('move file to trash', function (t) {
@@ -11,8 +12,8 @@ test('move file to trash', function (t) {
 
 	xdgTrash(['f0'], function (err, files) {
 		t.assert(!err, err);
-		t.assert(!fs.existsSync('f0'), fs.existsSync('f0'));
-		t.assert(fs.existsSync(files[0].path), fs.existsSync(files[0].path));
+		t.assert(!pathExists.sync('f0'), pathExists.sync('f0'));
+		t.assert(pathExists.sync(files[0].path), pathExists.sync(files[0].path));
 	});
 });
 
@@ -23,8 +24,8 @@ test('move file with spaces to trash', function (t) {
 
 	xdgTrash(['f 1'], function (err, files) {
 		t.assert(!err, err);
-		t.assert(!fs.existsSync('f 1'), fs.existsSync('f 1'));
-		t.assert(fs.existsSync(files[0].path), fs.existsSync(files[0].path));
+		t.assert(!pathExists.sync('f 1'), pathExists.sync('f 1'));
+		t.assert(pathExists.sync(files[0].path), pathExists.sync(files[0].path));
 	});
 });
 
@@ -35,8 +36,8 @@ test('move directory to trash', function (t) {
 
 	xdgTrash(['d0'], function (err, files) {
 		t.assert(!err, err);
-		t.assert(!fs.existsSync('d0'), fs.existsSync('d0'));
-		t.assert(fs.existsSync(files[0].path), fs.existsSync(files[0].path));
+		t.assert(!pathExists.sync('d0'), pathExists.sync('d0'));
+		t.assert(pathExists.sync(files[0].path), pathExists.sync(files[0].path));
 	});
 });
 
