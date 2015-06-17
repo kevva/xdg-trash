@@ -1,5 +1,4 @@
 'use strict';
-
 var path = require('path');
 var eachAsync = require('each-async');
 var fs = require('fs-extra');
@@ -8,11 +7,11 @@ var xdgTrashdir = require('xdg-trashdir');
 
 function trash(src, cb) {
 	xdgTrashdir(src, function (err, dir) {
-		if (err) {
-			if (err.code === 'ENOENT') {
-				err.noStack = true;
-			}
+		if (err && err.code === 'ENOENT') {
+			err.noStack = true;
+		}
 
+		if (err) {
 			cb(err);
 			return;
 		}
@@ -57,7 +56,7 @@ module.exports = function (paths, cb) {
 	}
 
 	if (!Array.isArray(paths)) {
-		throw new Error('`paths` is required');
+		throw new Error('Please supply an array of filepaths');
 	}
 
 	paths = paths.map(function (p) {
