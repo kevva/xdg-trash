@@ -52,11 +52,16 @@ module.exports = function (paths, cb) {
 	cb = cb || function () {};
 
 	if (process.platform !== 'linux') {
-		throw new Error ('Only Linux systems are supported');
+		throw new Error('Only Linux systems are supported');
 	}
 
 	if (!Array.isArray(paths)) {
 		throw new Error('Please supply an array of filepaths');
+	}
+
+	if (paths.length === 0) {
+		setImmediate(cb);
+		return;
 	}
 
 	paths = paths.map(function (p) {
