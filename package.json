@@ -13,7 +13,7 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "node test.js"
+    "test": "ava"
   },
   "files": [
     "index.js"
@@ -34,7 +34,7 @@
     "xdg-trashdir": "^2.0.0"
   },
   "devDependencies": {
-    "ava": "^0.0.4",
+    "ava": "^0.2.0",
     "path-exists": "^1.0.0"
   }
 }
