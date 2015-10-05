@@ -13,7 +13,7 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "node test.js"
+    "test": "xo && ava"
   },
   "files": [
     "index.js"
@@ -28,13 +28,15 @@
     "xdg"
   ],
   "dependencies": {
-    "each-async": "^1.1.0",
     "fs-extra": "^0.18.0",
+    "pify": "^2.2.0",
+    "pinkie-promise": "^1.0.0",
     "uuid": "^2.0.1",
-    "xdg-trashdir": "^1.0.0"
+    "xdg-trashdir": "^2.0.0"
   },
   "devDependencies": {
-    "ava": "^0.0.4",
+    "ava": "*",
+    "xo": "*",
     "path-exists": "^1.0.0"
   }
 }

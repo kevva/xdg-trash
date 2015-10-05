@@ -1,89 +1,64 @@
 'use strict';
 var path = require('path');
-var eachAsync = require('each-async');
-var fs = require('fs-extra');
+var fsExtra = require('fs-extra');
 var uuid = require('uuid');
 var xdgTrashdir = require('xdg-trashdir');
+var Promise = require('pinkie-promise');
+var pify = require('pify');
 
-function trash(src, cb) {
-	xdgTrashdir(src, function (err, dir) {
-		if (err && err.code === 'ENOENT') {
-			err.noStack = true;
-		}
+var fs = pify.all(fsExtra);
 
-		if (err) {
-			cb(err);
-			return;
-		}
+function trash(src) {
+	var name = uuid.v4();
 
-		var name = uuid.v4();
-		var dest = path.join(dir, 'files', name);
-		var info = path.join(dir, 'info', name + '.trashinfo');
+	return xdgTrashdir(src)
+		.then(function (dir) {
+			var dest = path.join(dir, 'files', name);
+			var info = path.join(dir, 'info', name + '.trashinfo');
+			var msg = [
+				'[Trash Info]',
+				'Path=' + src.replace(/\s/g, '%20'),
+				'DeletionDate=' + new Date().toISOString()
+			].join('\n');
 
-		var msg = [
-			'[Trash Info]',
-			'Path=' + src.replace(/\s/g, '%20'),
-			'DeletionDate=' + new Date().toISOString()
-		].join('\n');
-
-		fs.move(src, dest, {mkdirp: true}, function (err) {
-			if (err) {
-				cb(err);
-				return;
+			return Promise.all([
+				fs.move(src, dest, {mkdirp: true}).then(function () {
+					return dest;
+				}),
+				fs.outputFile(info, msg).then(function () {
+					return info;
+				})
+			]);
+		})
+		.then(function (result) {
+			return {
+				path: result[0],
+				info: result[1]
+			};
+		})
+		.catch(function (err) {
+			if (err.code === 'ENOENT') {
+				err.noStack = true;
 			}
-
-			fs.outputFile(info, msg, function (err) {
-				if (err) {
-					cb(err);
-					return;
-				}
-
-				cb(null, {
-					path: dest,
-					info: info
-				});
-			});
 		});
-	});
 }
 
-module.exports = function (paths, cb) {
-	var files = [];
-	cb = cb || function () {};
-
+module.exports = function (paths) {
 	if (process.platform !== 'linux') {
-		throw new Error('Only Linux systems are supported');
+		return Promise.reject(new Error('Only Linux systems are supported'));
 	}
 
 	if (!Array.isArray(paths)) {
-		throw new Error('Please supply an array of filepaths');
+		return Promise.reject(new Error('Please supply an array of filepaths'));
 	}
 
 	if (paths.length === 0) {
-		setImmediate(cb);
-		return;
+		return Promise.resolve();
 	}
 
 	paths = paths.map(function (p) {
-		return path.resolve(String(p));
+		return trash(path.resolve(String(p)));
 	});
 
-	eachAsync(paths, function (path, i, next) {
-		trash(path, function (err, file) {
-			if (err) {
-				next(err);
-				return;
-			}
-
-			files.push(file);
-			next();
-		});
-	}, function (err) {
-		if (err) {
-			cb(err);
-			return;
-		}
-
-		cb(null, files);
-	});
+	return Promise.all(paths);
 };
