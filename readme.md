@@ -13,9 +13,9 @@ $ npm install --save xdg-trash
 ## Usage
 
 ```js
-var xdgTrash = require('xdg-trash');
+const xdgTrash = require('xdg-trash');
 
-xdgTrash(['foo.txt', 'bar.tar'], function (err) {
+xdgTrash(['foo.txt', 'bar.tar']).then(() => {
 	console.log('Files successfully moved to trash!');
 });
 ```
@@ -23,9 +23,9 @@ xdgTrash(['foo.txt', 'bar.tar'], function (err) {
 
 ## API
 
-### xdgTrash(files, callback)
+### xdgTrash(files)
 
-Move files to trash.
+Move files to trash. Returns a promise that resolves to an array containing the removed files.
 
 #### files
 
@@ -33,12 +33,6 @@ Move files to trash.
 Type: `array`
 
 Files to be moved to trash.
-
-#### callback(err)
-
-Type: `function`
-
-Returns nothing but a possible exception.
 
 
 ## CLI
