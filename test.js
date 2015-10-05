@@ -1,70 +1,65 @@
-'use strict';
-var fs = require('fs');
-var path = require('path');
-var test = require('ava');
-var pathExists = require('path-exists');
-var xdgTrash = require('./');
+import fs from 'fs';
+import path from 'path';
+import test from 'ava';
+import pathExists from 'path-exists';
+import fn from './';
 
-test('move file to trash', function (t) {
+test('move file to trash', async t => {
 	t.plan(2);
 
 	fs.writeFileSync('f0', '');
 
-	xdgTrash(['f0']).then(function (files) {
-		t.assert(!pathExists.sync('f0'), pathExists.sync('f0'));
-		t.assert(pathExists.sync(files[0].path), pathExists.sync(files[0].path));
-	});
+	const files = await fn(['f0']);
+
+	t.false(pathExists.sync('f0'));
+	t.true(pathExists.sync(files[0].path));
 });
 
-test('move file with spaces to trash', function (t) {
+test('move file with spaces to trash', async t => {
 	t.plan(2);
 
 	fs.writeFileSync('f 1', '');
 
-	xdgTrash(['f 1']).then(function (files) {
-		t.assert(!pathExists.sync('f 1'), pathExists.sync('f 1'));
-		t.assert(pathExists.sync(files[0].path), pathExists.sync(files[0].path));
-	});
+	const files = await fn(['f 1']);
+
+	t.false(pathExists.sync('f 1'));
+	t.true(pathExists.sync(files[0].path));
 });
 
-test('move directory to trash', function (t) {
+test('move directory to trash', async t => {
 	t.plan(2);
 
 	fs.mkdirSync('d0');
 
-	xdgTrash(['d0']).then(function (files) {
-		t.assert(!pathExists.sync('d0'), pathExists.sync('d0'));
-		t.assert(pathExists.sync(files[0].path), pathExists.sync(files[0].path));
-	});
+	const files = await fn(['d0']);
+
+	t.false(pathExists.sync('d0'));
+	t.true(pathExists.sync(files[0].path));
 });
 
-test('create trashinfo', function (t) {
+test('create trashinfo', async t => {
 	t.plan(1);
 
 	fs.writeFileSync('f2', '');
 
-	var info = [
-		'[Trash Info]',
-		'Path=' + path.resolve('f2')
-	].join('\n');
+	const info = `[Trash Info]\nPath=${path.resolve('f2')}`;
+	const files = await fn(['f2']);
+	const infoFile = fs.readFileSync(files[0].info, 'utf8');
 
-	xdgTrash(['f2']).then(function (files) {
-		var infoFile = fs.readFileSync(files[0].info, 'utf8');
-		t.assert(infoFile.trim().indexOf(info.trim()) !== -1, infoFile.trim().indexOf(info.trim()));
-	});
+	t.is(infoFile.trim().indexOf(info.trim()), 0);
 });
 
-test('preserve file attributes', function (t) {
+test('preserve file attributes', async t => {
 	t.plan(4);
 
 	fs.writeFileSync('f3', '');
-	var statSrc = fs.statSync('f3');
 
-	xdgTrash(['f3']).then(function (files) {
-		var statDest = fs.statSync(files[0].path);
-		t.assert(statSrc.mode === statDest.mode, statSrc.mode);
-		t.assert(statSrc.uid === statDest.uid, statSrc.uid);
-		t.assert(statSrc.gid === statDest.gid, statSrc.gid);
-		t.assert(statSrc.size === statDest.size, statSrc.size);
-	});
+	const statSrc = fs.statSync('f3');
+	const files = await fn(['f3']);
+	const statDest = fs.statSync(files[0].path);
+
+	t.is(statSrc.mode, statDest.mode);
+	t.is(statSrc.uid, statDest.uid);
+	t.is(statSrc.gid, statDest.gid);
+	t.is(statSrc.size, statDest.size);
 });
