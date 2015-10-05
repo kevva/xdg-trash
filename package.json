@@ -38,5 +38,10 @@
     "ava": "*",
     "xo": "*",
     "path-exists": "^1.0.0"
+  },
+  "xo": {
+    "ignores": [
+      "test.js"
+    ]
   }
 }

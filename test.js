@@ -1,84 +1,67 @@
-'use strict';
-var fs = require('fs');
-var path = require('path');
-var test = require('ava');
-var pathExists = require('path-exists');
-var xdgTrash = require('./');
+import fs from 'fs';
+import path from 'path';
+import test from 'ava';
+import pathExists from 'path-exists';
+import xdgTrash from './';
 
-test('move file to trash', function (t) {
-	t.plan(3);
-
+test('move file to trash', async t => {
 	fs.writeFileSync('f0', '');
 
-	xdgTrash(['f0'], function (err, files) {
-		t.assert(!err, err);
-		t.assert(!pathExists.sync('f0'), pathExists.sync('f0'));
-		t.assert(pathExists.sync(files[0].path), pathExists.sync(files[0].path));
-	});
+	const files = await xdgTrash(['f0']);
+
+	t.false(pathExists.sync('f0'));
+	t.true(pathExists.sync(files[0].path));
 });
 
-test('move file with spaces to trash', function (t) {
-	t.plan(3);
-
+test('move file with spaces to trash', async t => {
 	fs.writeFileSync('f 1', '');
 
-	xdgTrash(['f 1'], function (err, files) {
-		t.assert(!err, err);
-		t.assert(!pathExists.sync('f 1'), pathExists.sync('f 1'));
-		t.assert(pathExists.sync(files[0].path), pathExists.sync(files[0].path));
-	});
+	const files = await xdgTrash(['f 1']);
+
+	t.false(pathExists.sync('f 1'));
+	t.true(pathExists.sync(files[0].path));
 });
 
-test('move directory to trash', function (t) {
-	t.plan(3);
-
+test('move directory to trash', async t => {
 	fs.mkdirSync('d0');
 
-	xdgTrash(['d0'], function (err, files) {
-		t.assert(!err, err);
-		t.assert(!pathExists.sync('d0'), pathExists.sync('d0'));
-		t.assert(pathExists.sync(files[0].path), pathExists.sync(files[0].path));
-	});
+	const files xdgTrash(['d0']);
+
+	t.false(pathExists.sync('d0'));
+	t.true(pathExists.sync(files[0].path));
 });
 
-test('create trashinfo', function (t) {
-	t.plan(2);
-
+test('create trashinfo', async t => {
 	fs.writeFileSync('f2', '');
 
-	var info = [
+	const info = [
 		'[Trash Info]',
 		'Path=' + path.resolve('f2')
 	].join('\n');
 
-	xdgTrash(['f2'], function (err, files) {
-		var infoFile = fs.readFileSync(files[0].info, 'utf8');
-		t.assert(!err, err);
-		t.assert(infoFile.trim().indexOf(info.trim()) !== -1, infoFile.trim().indexOf(info.trim()));
-	});
+	const files = await xdgTrash(['f2']);
+	const infoFile = fs.readFileSync(files[0].info, 'utf8');
+
+	t.is(infoFile.trim().indexOf(info.trim()), 0);
 });
 
-test('preserve file attributes', function (t) {
-	t.plan(5);
-
+test('preserve file attributes', async t => {
 	fs.writeFileSync('f3', '');
-	var statSrc = fs.statSync('f3');
+	const statSrc = fs.statSync('f3');
 
-	xdgTrash(['f3'], function (err, files) {
-		var statDest = fs.statSync(files[0].path);
-		t.assert(!err, err);
-		t.assert(statSrc.mode === statDest.mode, statSrc.mode);
-		t.assert(statSrc.uid === statDest.uid, statSrc.uid);
-		t.assert(statSrc.gid === statDest.gid, statSrc.gid);
-		t.assert(statSrc.size === statDest.size, statSrc.size);
-	});
+	const files = await xdgTrash(['f3']);
+	const statDest = fs.statSync(files[0].path);
+
+	t.is(statSrc.mode, statDest.mode);
+	t.is(statSrc.uid, statDest.uid);
+	t.is(statSrc.gid, statDest.gid);
+	t.is(statSrc.size, statDest.size);
 });
 
-test('set `.noStack` to true when file does not exist', function (t) {
-	t.plan(2);
-
-	xdgTrash(['f4'], function (err) {
-		t.assert(err, err);
-		t.assert(err.noStack, err.noStack);
-	});
+test('set `.noStack` to true when file does not exist', asyc t => {
+	try {
+		await xdgTrash(['f4']);
+	} catch (err) {
+		t.true(err.noStack);
+	}
 });
