@@ -40,6 +40,8 @@ function trash(src) {
 			if (err.code === 'ENOENT') {
 				err.noStack = true;
 			}
+
+			throw err;
 		});
 }
 
