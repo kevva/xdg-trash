@@ -29,6 +29,7 @@
   ],
   "dependencies": {
     "fs-extra": "^0.18.0",
+    "pify": "^2.2.0",
     "pinkie-promise": "^1.0.0",
     "uuid": "^2.0.1",
     "xdg-trashdir": "^2.0.0"
